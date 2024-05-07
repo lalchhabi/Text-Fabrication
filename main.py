@@ -6,7 +6,10 @@ import string
 from rotate_img import draw_rotated_text
 import math
 import time
+from color_picker import color_fill_tuple
 
+
+print(color_fill_tuple)
 ij = 0
 if 'output' in os.listdir(os.getcwd()):  #### create a directory to save the output
      pass
@@ -74,7 +77,7 @@ def create_data(img,x1,x2, y1,y2, imgno)-> None:
         st = time.time()
         image= Image.open(img) 
         font_path = random.choice([
-                                   ImageFont.truetype('fonts/inkjet/inkjet-regular.ttf',random.randint(40,42))
+                                   ImageFont.truetype('fonts/inkjet/MerchantCopy-GOXq.ttf',random.randint(50,52))
                                   ])  #### to choose a font randomly
         
         # ImageFont.truetype('fonts/inkjet/MerchantCopy-GOXq.ttf',random.randint(55,60)),
@@ -92,9 +95,9 @@ def create_data(img,x1,x2, y1,y2, imgno)-> None:
         ycor3 = ycor2 + random.randint(35,45)
         rot_ang = random.randint(-1,1)
         #print("time0: ", time.time()-st)
-        image = draw_rotated_text(image,rot_ang,(xcor1,ycor1),line1,(0,10,0),font = font_path)
-        image = draw_rotated_text(image,rot_ang,(xcor2,ycor2),line2,(0,10,0),font = font_path)
-        image = draw_rotated_text(image,rot_ang,(xcor3,ycor3),line3,(0,10,0),font = font_path)
+        image = draw_rotated_text(image,rot_ang,(xcor1,ycor1),line1,color_fill_tuple,font = font_path)
+        image = draw_rotated_text(image,rot_ang,(xcor2,ycor2),line2,color_fill_tuple,font = font_path)
+        image = draw_rotated_text(image,rot_ang,(xcor3,ycor3),line3,color_fill_tuple,font = font_path)
        
         name_image_text = str(time.time())
         op_img_name = os.path.join('output',str(name_image_text) + '.jpg')
@@ -140,4 +143,4 @@ def create_data(img,x1,x2, y1,y2, imgno)-> None:
     - imgno: Number of Image
     =========================================
     '''
-create_data('blank_image.png',90,100,80,90,1) 
+create_data('pink_blank.png',90,100,80,90,1) 
