@@ -1,19 +1,19 @@
 import tkinter as tk
 import customtkinter as ctk
 from PIL import Image, ImageTk
-import yaml
 
 ctk.set_appearance_mode("Light")
 ctk.set_default_color_theme("green")
 
 
-class App(ctk.CTk):
+class ColorApp(ctk.CTkToplevel):
     def __init__(self, image_path):
         super().__init__()
 
         # configure window
-        self.title("Labling Bounding box")
-        self.geometry(f"{1200}x{600}")
+        self.title("Color Picker")
+        self.geometry(f"{800}x{600}")
+        self.attributes('-topmost', True)
         #loading image
         self.load_image(image_path)
         
@@ -25,35 +25,39 @@ class App(ctk.CTk):
         # create sidebar frame with widgets
         ##=================left side bar frame andbutton=========================##
         self.sidebar_frame = ctk.CTkFrame(self, width=200, corner_radius=0)
-        self.sidebar_frame.grid(row=0, column=0, rowspan=2, sticky="nsew")
-        self.sidebar_frame.grid_rowconfigure(4, weight=1)
+        self.sidebar_frame.grid(row=0, column=0, rowspan=5, sticky="nsew")
+        self.sidebar_frame.grid_rowconfigure(8, weight=1)
         self.entry=ctk.CTkLabel(self.sidebar_frame,text="RGB Color Code")
-        self.entry.grid(row=0, column=0, padx=10, pady=5,sticky="w")
-        self.entry = ctk.CTkEntry(self.sidebar_frame,width=200)
-        self.entry.grid(row=0, column=1,sticky="w")
+        self.entry.grid(row=0, column=0, padx=10, pady=5,sticky="ew")
+        self.entry = ctk.CTkEntry(self.sidebar_frame,width=150)
+        self.entry.grid(row=0, column=1,sticky="ew")
         self.entry1=ctk.CTkLabel(self.sidebar_frame,text="HEX Code")
-        self.entry1.grid(row=1, column=0, padx=10, pady=5,sticky="w")
-        self.entry1 = ctk.CTkEntry(self.sidebar_frame,width=200)
-        self.entry1.grid(row=1, column=1, padx=0, pady=5,sticky="w")
+        self.entry1.grid(row=1, column=0, padx=10, pady=5,sticky="ew")
+        self.entry1 = ctk.CTkEntry(self.sidebar_frame,width=150)
+        self.entry1.grid(row=1, column=1, padx=0, pady=5,sticky="ew")
        
         self.color_display = ctk.CTkButton(self.sidebar_frame, text=" ",width=200)
-        self.color_display.grid(row=3, column=1, padx=0, pady=5,sticky="w")
+        self.color_display.grid(row=3, column=0, columnspan=2,padx=10, pady=10,sticky="ew")
 
         self.sidebar_button_2 = ctk.CTkButton(self.sidebar_frame, command=self.save_color, text="Save Color",width=200)
-        self.sidebar_button_2.grid(row=4, column=1, padx=10, pady=10,sticky="w")
+        self.sidebar_button_2.grid(row=4, column=0, columnspan=2,padx=10, pady=10,sticky="ew")
+        self.another_image_button = ctk.CTkButton(self.sidebar_frame, command=self.imagetobe_fabricated, text="Load Another Image",width=200)
+        self.another_image_button.grid(row=5, column=0, columnspan=2,padx=10, pady=10,sticky="ew")
         
-        self.appearance_mode_label = ctk.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
-        self.appearance_mode_label.grid(row=5, column=0, padx=10, pady=10,sticky="w")
-        self.appearance_mode_optionemenu = ctk.CTkOptionMenu(self.sidebar_frame, values=["Light", "Dark", "System"], width=200,command=self.change_appearance_mode_event)
-        self.appearance_mode_optionemenu.grid(row=5, column=1, padx=10, pady=5,sticky="w")
-        self.appearance_mode_optionemenu.set("Light")
+    #     self.appearance_mode_label = ctk.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
+    #     self.appearance_mode_label.grid(row=5, column=0, padx=10, pady=10,sticky="w")
+    #     self.appearance_mode_optionemenu = ctk.CTkOptionMenu(self.sidebar_frame, values=["Light", "Dark", "System"], width=200,command=self.change_appearance_mode_event)
+    #     self.appearance_mode_optionemenu.grid(row=5, column=1, padx=10, pady=5,sticky="w")
+    #     self.appearance_mode_optionemenu.set("Light")
 
 
-    #####===================Changing the mode Light and Dark mode=============############
-    def change_appearance_mode_event(self, new_appearance_mode: str):
-        ctk.set_appearance_mode(new_appearance_mode)
+    # #####===================Changing the mode Light and Dark mode=============############
+    # def change_appearance_mode_event(self, new_appearance_mode: str):
+    #     ctk.set_appearance_mode(new_appearance_mode)
 
-    
+    def imagetobe_fabricated(self):
+        imagename=ctk.filedialog.askopenfilename(initialdir="/Desktop/python codes",title="open images",filetypes=(("png files","*.png"),("jpg files","*.jpg"),("jpeg files","*.jpeg")))
+        self.load_image(imagename)
     ####=============Image loading in canvas================#########
     def load_image(self,image_path):
         self.image_path = image_path
@@ -123,12 +127,12 @@ class App(ctk.CTk):
         color=self.entry.get()
         with open("color.txt", "w") as f:
             f.write(f"{color}")
-        print("Coordinates saved to rectangle_coordinates.txt")
+        print("Color Value Saved")
         return(color)
 
 if __name__ == "__main__":
     image_path = "C:/Users/shres/OneDrive/Desktop/Office/det/OCR_training/bounding box software/IMG1.bmp"
-    app = App(image_path)
+    app = ColorApp(image_path)
     app.mainloop()
 
 
@@ -146,7 +150,14 @@ def read_from_txt_file(file_path):
 
 file_path = "color.txt"
 color_fill=read_from_txt_file(file_path)
-color_fill_tuple = tuple(map(int, color_fill.strip('()').split(', ')))
+try:
+    color_fill_tuple = tuple(map(int, color_fill.strip('()').split(', ')))
+# print(color_fill)
+except Exception as e:
+    print("you need to choose the color first",e)
+    color_fill_tuple=(0,0,0) 
+
+   
 
 
 

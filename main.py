@@ -1,7 +1,6 @@
 import os
 import random
-from PIL import Image
-from PIL import ImageFont,ImageDraw
+from PIL import Image,ImageFont
 import string
 from rotate_img import draw_rotated_text
 import math
@@ -9,7 +8,6 @@ import time
 from color_picker import color_fill_tuple
 
 
-print(color_fill_tuple)
 ij = 0
 if 'output' in os.listdir(os.getcwd()):  #### create a directory to save the output
      pass
@@ -63,7 +61,7 @@ def get_rotated_coordinates(xcor, ycor, width, height, rot_ang, line):
     final_result = f"{str(rect_box).replace('[','').replace(']','')}, {line}"
     return final_result
 
-def create_data(img,x1,x2, y1,y2, imgno)-> None:
+def create_data(img,x1,x2, y1,y2, imgno,font)-> None:
     '''
     Function that generate data within any location of custom image
     *Parameters*
@@ -72,12 +70,13 @@ def create_data(img,x1,x2, y1,y2, imgno)-> None:
     - Y1,Y2: Starting point of coordinates vertical 
     - imgno: Number of Image
     '''
+    fontname=font
     for y in range(0,imgno):
         orig_dir = os.getcwd()
         st = time.time()
         image= Image.open(img) 
         font_path = random.choice([
-                                   ImageFont.truetype('fonts/inkjet/MerchantCopy-GOXq.ttf',random.randint(50,52))
+                                   ImageFont.truetype(fontname,random.randint(50,52))
                                   ])  #### to choose a font randomly
         
         # ImageFont.truetype('fonts/inkjet/MerchantCopy-GOXq.ttf',random.randint(55,60)),
@@ -87,8 +86,9 @@ def create_data(img,x1,x2, y1,y2, imgno)-> None:
         line2= chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z')))  + " " + random_char(random.randint(4,5)) 
         line3 = chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z'))) + " " + random_char(random.randint(4,5))
         # line3 = "MRPRS " + random_char(random.randint(10,12))
-        xcor1=random.randint(x1,x2)
-        ycor1=random.randint(y1,y2)
+
+        xcor1=random.randint(int(x1),int(x2))
+        ycor1=random.randint(int(y1),int(y2))
         xcor2 = xcor1
         ycor2 = ycor1 + random.randint(35,45)
         xcor3 = xcor1 
@@ -143,4 +143,4 @@ def create_data(img,x1,x2, y1,y2, imgno)-> None:
     - imgno: Number of Image
     =========================================
     '''
-create_data('pink_blank.png',90,100,80,90,1) 
+# create_data('pink_blank.png',90,100,80,90,1) 
