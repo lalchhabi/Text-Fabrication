@@ -1,8 +1,10 @@
 import tkinter as tk
 import customtkinter as ctk
+from CTkMessagebox import CTkMessagebox
 from PIL import Image, ImageTk
-from color_picker import color_fill_tuple,ColorApp
+from color_picker import ColorApp
 from main import create_data
+import pickle
 
 
 ctk.set_appearance_mode("Light")
@@ -14,7 +16,7 @@ class App(ctk.CTk):
         super().__init__()
 
         # configure window
-        self.title("Color Picker")
+        self.title("Data Fabrication")
         self.geometry(f"{1200}x{600}")
         #loading image
         self.load_image(image_path)
@@ -30,6 +32,9 @@ class App(ctk.CTk):
         self.sidebar_frame = ctk.CTkFrame(self, width=200,height=600, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, rowspan=5, sticky="nsew")
         self.sidebar_frame.grid_rowconfigure(9, weight=1)
+        self.rsidebar_frame = ctk.CTkFrame(self, width=200,height=600, corner_radius=0)
+        self.rsidebar_frame.grid(row=0, column=2, rowspan=5, sticky="nsew")
+        self.rsidebar_frame.grid_rowconfigure(9, weight=1)
 
         self.load_image_button = ctk.CTkButton(self.sidebar_frame, text="load image",command=self.imagetobe_fabricated,width=200)
         self.load_image_button.grid(row=0, column=0, padx=10, pady=10,columnspan=2, sticky="ew")
@@ -58,23 +63,42 @@ class App(ctk.CTk):
 
         self.color_button = ctk.CTkButton(self.sidebar_frame, command=self.colorpicker,text="Choose Color",width=200)
         self.color_button.grid(row=6, column=0, padx=10, pady=10,columnspan=2,sticky="ew")
+        
+        
+        # self.color_label=ctk.CTkLabel(self.sidebar_frame,text="Color Value (R, G, B) :")
+        # self.color_label.grid(row=7, column=0, padx=10, pady=10,sticky="ew")
+        # self.color_entry = ctk.CTkEntry(self.sidebar_frame,width=150)
+        # self.color_entry.grid(row=7, column=1, padx=10, pady=10,sticky="ew")
 
-        self.color_label=ctk.CTkLabel(self.sidebar_frame,text="Color Value (R, G, B) :")
-        self.color_label.grid(row=7, column=0, padx=10, pady=10,sticky="ew")
-        self.color_entry = ctk.CTkEntry(self.sidebar_frame,width=150,placeholder_text=color_fill_tuple,placeholder_text_color='black')
-        self.color_entry.grid(row=7, column=1, padx=10, pady=10,sticky="ew")
-
-        self.image_number_entry=ctk.CTkLabel(self.sidebar_frame,text="Number of image to generate :")
-        self.image_number_entry.grid(row=8, column=0,  padx=10, pady=10,sticky="ew")
+        self.image_number_label=ctk.CTkLabel(self.sidebar_frame,text="Number of image to generate :")
+        self.image_number_label.grid(row=8, column=0,  padx=10, pady=10,sticky="ew")
         self.image_number_entry = ctk.CTkEntry(self.sidebar_frame,width=150)
         self.image_number_entry.grid(row=8, column=1, padx=10, pady=10,sticky="ew")
 
         self.font_button = ctk.CTkButton(self.sidebar_frame, text="Generate Fabricated Data",command=self.generate_data,width=200)
         self.font_button.grid(row=9, column=0,columnspan = 2,  padx=10, pady=10,sticky="ew")
 
+        self.coordinate_label=ctk.CTkLabel(self.rsidebar_frame,text="Coordinate(X1,Y1)")
+        self.coordinate_label.grid(row=0, column=3,  padx=5, pady=5,sticky="ew")
+        self.coordinate_entry=ctk.CTkEntry(self.rsidebar_frame,width=150)
+        self.coordinate_entry.grid(row=1,column=3,padx=5,pady=5,sticky='ew')
+
+    def on_press(self, event):
+        x = self.canvas.canvasx(event.x)
+        y = self.canvas.canvasy(event.y)
+        pixels = int(x),int(y)
+        
+        self.coordinate_entry.delete(0,ctk.END)
+        self.coordinate_entry.insert(0,str(pixels))
+        self.x1_entry.delete(0,ctk.END)
+        self.x1_entry.insert(0,str(int(x)))
+        self.y1_entry.delete(0,ctk.END)
+        self.y1_entry.insert(0,str(int(y)))
+
 
     def colorpicker(self):
         ColorApp(self.imagename)
+
 
     def imagetobe_fabricated(self):
         self.imagename=ctk.filedialog.askopenfilename(initialdir="/Desktop/",title="open images",filetypes=(("png files","*.png"),("jpg files","*.jpg"),("jpeg files","*.jpeg")))
@@ -83,10 +107,14 @@ class App(ctk.CTk):
     def load_font(self):
         self.font = ctk.filedialog.askopenfilenames(title="choose font",filetypes=[("ttf files","*.ttf")])
     
+    def complete(self):
+        CTkMessagebox(message="Data Fabrication Completed",icon="check", option_1="Ok")
+    
     def generate_data(self):
         try:
             font=''.join([str(x) for x in self.font])
             create_data(self.imagename,self.x1_entry.get(),self.x2_entry.get(),self.y1_entry.get(),self.y2_entry.get(),int(self.image_number_entry.get()),font=font)
+            CTkMessagebox(message="Data Fabrication Completed",icon="check", option_1="Ok")
             print("====data fabrication complete======")
 
         except Exception as e:
@@ -129,6 +157,7 @@ class App(ctk.CTk):
        
         # Load image onto canvas
         self.canvas.create_image(0, 0, anchor="nw", image=self.photo)
+        self.canvas.bind("<ButtonPress-1>", self.on_press)
         self.canvas.bind("<MouseWheel>", self.on_mousewheel)
         
     def on_mousewheel(self, event):
@@ -144,5 +173,6 @@ class App(ctk.CTk):
 if __name__ == "__main__":
     image_path =r"C:\Users\shres\OneDrive\Desktop\Office\data_fabrication\Text-Fabrication\blank_image.png"
     app = App(image_path)
+
     app.mainloop()
 

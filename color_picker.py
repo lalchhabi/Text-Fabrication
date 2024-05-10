@@ -1,21 +1,21 @@
+import pickle
 import tkinter as tk
 import customtkinter as ctk
 from PIL import Image, ImageTk
-
 ctk.set_appearance_mode("Light")
 ctk.set_default_color_theme("green")
 
 
 class ColorApp(ctk.CTkToplevel):
-    def __init__(self, image_path):
+    def __init__(self, image_path ):
         super().__init__()
-
         # configure window
         self.title("Color Picker")
         self.geometry(f"{800}x{600}")
         self.attributes('-topmost', True)
         #loading image
         self.load_image(image_path)
+        self.protocol("WM_DELETE_WINDOW", self.external_on_closing)
         
         # configure grid layout (4x4)
         self.grid_columnconfigure(1, weight=1)
@@ -127,8 +127,13 @@ class ColorApp(ctk.CTkToplevel):
         color=self.entry.get()
         with open("color.txt", "w") as f:
             f.write(f"{color}")
+        # pickle.dump(color,open("color.pkl","wb"))
         print("Color Value Saved")
         return(color)
+    
+    def external_on_closing(self):
+        self.destroy()
+
 
 if __name__ == "__main__":
     image_path = "C:/Users/shres/OneDrive/Desktop/Office/det/OCR_training/bounding box software/IMG1.bmp"
@@ -152,12 +157,8 @@ file_path = "color.txt"
 color_fill=read_from_txt_file(file_path)
 try:
     color_fill_tuple = tuple(map(int, color_fill.strip('()').split(', ')))
-# print(color_fill)
+    # print(color_fill)
 except Exception as e:
     print("you need to choose the color first",e)
     color_fill_tuple=(0,0,0) 
-
-   
-
-
 
