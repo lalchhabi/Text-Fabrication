@@ -5,7 +5,8 @@ import string
 from rotate_img import draw_rotated_text
 import math
 import time
-from color_picker import color_fill_tuple
+
+
 
 
 ij = 0
@@ -61,7 +62,7 @@ def get_rotated_coordinates(xcor, ycor, width, height, rot_ang, line):
     final_result = f"{str(rect_box).replace('[','').replace(']','')}, {line}"
     return final_result
 
-def create_data(img,x1,x2, y1,y2, imgno,font)-> None:
+def create_data(img,x1,x2, y1,y2, imgno,ftype,textcolor,fontname)-> None:
     '''
     Function that generate data within any location of custom image
     *Parameters*
@@ -70,7 +71,6 @@ def create_data(img,x1,x2, y1,y2, imgno,font)-> None:
     - Y1,Y2: Starting point of coordinates vertical 
     - imgno: Number of Image
     '''
-    fontname=font
     for y in range(0,imgno):
         orig_dir = os.getcwd()
         st = time.time()
@@ -87,17 +87,42 @@ def create_data(img,x1,x2, y1,y2, imgno,font)-> None:
         line3 = chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z'))) + " " + random_char(random.randint(4,5))
         # line3 = "MRPRS " + random_char(random.randint(10,12))
 
-        xcor1=random.randint(int(x1),int(x2))
-        ycor1=random.randint(int(y1),int(y2))
-        xcor2 = xcor1
-        ycor2 = ycor1 + random.randint(35,45)
-        xcor3 = xcor1 
-        ycor3 = ycor2 + random.randint(35,45)
+       
+        if ftype == 0:
+            xcor1=random.randint(int(x1),int(x2))
+            ycor1=random.randint(int(y1),int(y2))
+            xcor2 = xcor1
+            ycor2 = ycor1 + random.randint(35,45)
+            xcor3 = xcor1 
+            ycor3 = ycor2 + random.randint(35,45)
+        elif ftype == 1:
+            xcor1=random.randint(int(x1),int(x2))
+            ycor1=random.randint(int(y1),int(y2))
+            xcor2 = xcor1
+            ycor2 = ycor1 + random.randint(35,45)
+            xcor3 = xcor1 
+            ycor3 = ycor2 + random.randint(35,45)
+        elif ftype == 2:
+            xcor1=random.randint(int(x1),int(x2))
+            ycor1=random.randint(int(y1),int(y2))
+            xcor2 = xcor1
+            ycor2 = ycor1 + random.randint(35,45)
+            xcor3 = xcor1 
+            ycor3 = ycor2 + random.randint(35,45)
+        elif ftype == 3:
+            xcor1=random.randint(int(x1),int(x2))
+            ycor1=random.randint(int(y1),int(y2))
+            xcor2 = xcor1
+            ycor2 = ycor1 + random.randint(35,45)
+            xcor3 = xcor1 
+            ycor3 = ycor2 + random.randint(35,45)
+        
+            
         rot_ang = random.randint(-1,1)
         #print("time0: ", time.time()-st)
-        image = draw_rotated_text(image,rot_ang,(xcor1,ycor1),line1,color_fill_tuple,font = font_path)
-        image = draw_rotated_text(image,rot_ang,(xcor2,ycor2),line2,color_fill_tuple,font = font_path)
-        image = draw_rotated_text(image,rot_ang,(xcor3,ycor3),line3,color_fill_tuple,font = font_path)
+        image = draw_rotated_text(image,rot_ang,(xcor1,ycor1),line1,textcolor,font = font_path)
+        image = draw_rotated_text(image,rot_ang,(xcor2,ycor2),line2,textcolor,font = font_path)
+        image = draw_rotated_text(image,rot_ang,(xcor3,ycor3),line3,textcolor,font = font_path)
        
         name_image_text = str(time.time())
         op_img_name = os.path.join('output',str(name_image_text) + '.jpg')

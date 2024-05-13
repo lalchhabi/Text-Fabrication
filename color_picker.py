@@ -15,24 +15,25 @@ class ColorApp(ctk.CTkToplevel):
         self.attributes('-topmost', True)
         #loading image
         self.load_image(image_path)
-        self.protocol("WM_DELETE_WINDOW", self.external_on_closing)
+        self.pixels=None
         
         # configure grid layout (4x4)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure((2), weight=0)
-        self.grid_rowconfigure((0, 1, 2), weight=1)        
+        self.grid_rowconfigure((0, 1, 2), weight=1)  
+        self.entry=None      
         
         # create sidebar frame with widgets
         ##=================left side bar frame andbutton=========================##
         self.sidebar_frame = ctk.CTkFrame(self, width=200, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, rowspan=5, sticky="nsew")
         self.sidebar_frame.grid_rowconfigure(8, weight=1)
-        self.entry=ctk.CTkLabel(self.sidebar_frame,text="RGB Color Code")
-        self.entry.grid(row=0, column=0, padx=10, pady=5,sticky="ew")
+        self.entry_label=ctk.CTkLabel(self.sidebar_frame,text="RGB Color Code")
+        self.entry_label.grid(row=0, column=0, padx=10, pady=5,sticky="ew")
         self.entry = ctk.CTkEntry(self.sidebar_frame,width=150)
         self.entry.grid(row=0, column=1,sticky="ew")
-        self.entry1=ctk.CTkLabel(self.sidebar_frame,text="HEX Code")
-        self.entry1.grid(row=1, column=0, padx=10, pady=5,sticky="ew")
+        self.entry1_label=ctk.CTkLabel(self.sidebar_frame,text="HEX Code")
+        self.entry1_label.grid(row=1, column=0, padx=10, pady=5,sticky="ew")
         self.entry1 = ctk.CTkEntry(self.sidebar_frame,width=150)
         self.entry1.grid(row=1, column=1, padx=0, pady=5,sticky="ew")
        
@@ -111,11 +112,11 @@ class ColorApp(ctk.CTkToplevel):
     def on_press(self, event):
         x = self.canvas.canvasx(event.x)
         y = self.canvas.canvasy(event.y)
-        pixels = self.image.getpixel((x, y))
-        ds = self.from_rgb((pixels))
+        self.pixels = self.image.getpixel((x, y))
+        ds = self.from_rgb((self.pixels))
         color=ds
         self.entry.delete(0,ctk.END)
-        self.entry.insert(0,str(pixels))
+        self.entry.insert(0,str(self.pixels))
         #####=====Hex Code========#
         self.entry1.delete(0,ctk.END)
         self.entry1.insert(0,str(color))
@@ -125,14 +126,13 @@ class ColorApp(ctk.CTkToplevel):
     ####===========saving color value=============##########
     def save_color(self):
         color=self.entry.get()
-        with open("color.txt", "w") as f:
-            f.write(f"{color}")
-        # pickle.dump(color,open("color.pkl","wb"))
-        print("Color Value Saved")
         return(color)
     
-    def external_on_closing(self):
-        self.destroy()
+    def get_current_color(self):
+        x=self.pixels
+        return x
+    
+
 
 
 if __name__ == "__main__":
@@ -141,24 +141,5 @@ if __name__ == "__main__":
     app.mainloop()
 
 
-def read_from_txt_file(file_path):
-    try:
-        with open(file_path, 'r') as file:
-            content = file.read()
-        return content
-    except FileNotFoundError:
-        print(f"Error: File '{file_path}' not found.")
-        return None
-    except Exception as e:
-        print(f"Error: An unexpected error occurred - {e}")
-        return None
 
-file_path = "color.txt"
-color_fill=read_from_txt_file(file_path)
-try:
-    color_fill_tuple = tuple(map(int, color_fill.strip('()').split(', ')))
-    # print(color_fill)
-except Exception as e:
-    print("you need to choose the color first",e)
-    color_fill_tuple=(0,0,0) 
 
