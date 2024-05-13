@@ -14,7 +14,7 @@ class FabricationApp(tk.Toplevel):
         self.grid_columnconfigure((0, 1), weight=1)
         self.grid_rowconfigure((0, 1, 2), weight=1)
 
-        # Load images
+        ####+========= Load images ========###########
         original_images = [
             Image.open(r"C:\Users\shres\OneDrive\Desktop\Office\data_fabrication\Text-Fabrication\blank_image.png"),
             Image.open(r"C:\Users\shres\OneDrive\Desktop\Office\data_fabrication\Text-Fabrication\blank_image.png"),
@@ -22,18 +22,16 @@ class FabricationApp(tk.Toplevel):
             Image.open(r"C:\Users\shres\OneDrive\Desktop\Office\data_fabrication\Text-Fabrication\pink_blank.png")
         ]
 
-        # Resize images by scaling down by 20%
+        ####==== Resize images by scaling down by 20%===========########
         scaled_images = [img.resize((int(img.width * 0.8), int(img.height * 0.8)), Image.LANCZOS) for img in original_images]
 
-        # Create PhotoImage objects for each image
         self.photo_images = [ImageTk.PhotoImage(img) for img in scaled_images]
 
-        # Create buttons and associate images with them
         self.buttons = []
-        self.selected_index = None  # Track currently selected button index
+        self.selected_index = None  # Tra
         for i, photo_image in enumerate(self.photo_images):
             button = tk.Button(self, image=photo_image)
-            button.configure(command=lambda idx=i: self.change_color(idx))  # Add command to change color
+            button.configure(command=lambda idx=i: self.change_color(idx)) 
             button.grid(row=i // 2, column=i % 2, sticky="nsew")
             self.buttons.append(button)
 
@@ -42,12 +40,10 @@ class FabricationApp(tk.Toplevel):
         self.ok_button.grid(row=2, column=0, columnspan=2, sticky="nsew")
 
     def change_color(self, index):
-        # Change the background color of the previously selected button back to its original color
         if self.selected_index is not None:
             self.buttons[self.selected_index].configure(bg=self.cget("bg"))
-        # Change the background color of the clicked button to blue
         self.buttons[index].configure(bg="green")
-        self.selected_index = index  # Update the currently selected button index
+        self.selected_index = index  
 
     
     def ok_clicked(self):

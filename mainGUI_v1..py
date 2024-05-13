@@ -87,7 +87,7 @@ class App(ctk.CTk):
         self.coordinate_entry.grid(row=1,column=3,padx=5,pady=5,sticky='ew')
         self.y=None
    
-
+    ######==========selecting the starting point range(x1,x2) and (y1,y2) by clicking on canvas=============#######
     def on_press(self, event):
         x = self.canvas.canvasx(event.x)
         y = self.canvas.canvasy(event.y)
@@ -104,7 +104,7 @@ class App(ctk.CTk):
         self.y2_entry.delete(0,ctk.END)
         self.y2_entry.insert(0,str(int(y)+8))
 
-
+    #####========colorpicker app open and color update===###
     def colorpicker(self):
         x=ColorApp(self.imagename)
         while(x.get_current_color() == None):
@@ -114,25 +114,32 @@ class App(ctk.CTk):
             self.color_entry.insert(0,str(x.get_current_color()))     
             app.update() 
             self.y = x.get_current_color()
-        
 
+    #####=======choosing fabrication image====######    
     def type_fabrication(self):
         a = FabricationApp()
         while(a.get_current_index() == None):
             app.update()
         self.ftype=a.get_current_index()
 
-
+    #####======Loading the blank image where fabrication is to be done======#####
     def imagetobe_fabricated(self):
         self.imagename=ctk.filedialog.askopenfilename(initialdir="/Desktop/",title="open images",filetypes=(("png files","*.png"),("jpg files","*.jpg"),("jpeg files","*.jpeg")))
         self.load_image(self.imagename)
     
+    #####======Loading font========########
     def load_font(self):
         self.font = ctk.filedialog.askopenfilenames(title="choose font",filetypes=[("ttf files","*.ttf")])
     
+    ###========completion message=======######
     def complete(self):
         CTkMessagebox(message="Data Fabrication Completed",icon="check", option_1="Ok")
+    #######=========warning message========#####
+    def open_warning(self):
+        CTkMessagebox(title="Warning Message!", message="Load the image!",
+                  icon="warning", option_1="Ok")
     
+    #####=======function to generate the fabricated data=======#########    
     def generate_data(self):
         try:
             font=''.join([str(x) for x in self.font])
@@ -144,12 +151,6 @@ class App(ctk.CTk):
         except Exception as e:
             CTkMessagebox(title="Error", message="Load the Font or input other varible", icon="cancel")
             print(e)
-            
-    
-    def open_warning(self):
-        CTkMessagebox(title="Warning Message!", message="Load the image!",
-                  icon="warning", option_1="Ok")
-
 
     ####=============Image loading in canvas================#########
     def load_image(self,image_path):
