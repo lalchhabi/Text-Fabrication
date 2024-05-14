@@ -5,6 +5,7 @@ import string
 from rotate_img import draw_rotated_text
 import math
 import time
+import tkinter as tk
 
 
 
@@ -75,6 +76,7 @@ def create_data(img,x1,x2, y1,y2, imgno,ftype,textcolor,fontname)-> None:
         orig_dir = os.getcwd()
         st = time.time()
         image= Image.open(img) 
+        # ImageFont.ImageFont.getlength()
         font_path = random.choice([
                                    ImageFont.truetype(fontname,random.randint(50,52))
                                   ])  #### to choose a font randomly
@@ -82,47 +84,84 @@ def create_data(img,x1,x2, y1,y2, imgno,ftype,textcolor,fontname)-> None:
         # ImageFont.truetype('fonts/inkjet/MerchantCopy-GOXq.ttf',random.randint(55,60)),
         # ImageFont.truetype('fonts/inkjet/inkjet-regular.ttf',random.randint(55,60))
         
-        line1= "Rs." + random_char(random.randint(2,3)) + " (Re " + "0." + random_char(random.randint(2,3)) + "/ml)  " + chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z'))) + random_char(random.randint(4,7)) + chr(random.randint(ord('A'), ord('Z'))) + '/' + random_char(random.randint(1,2)) 
-        line2= chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z')))  + " " + random_char(random.randint(4,5)) 
-        line3 = chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z'))) + " " + random_char(random.randint(4,5))
+        # line1= "Rs." + random_char(random.randint(2,3)) + " (Re " + "0." + random_char(random.randint(2,3)) + "/ml)  " + chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z'))) + random_char(random.randint(4,7)) + chr(random.randint(ord('A'), ord('Z'))) + '/' + random_char(random.randint(1,2)) 
+        # line2= chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z')))  + " " + random_char(random.randint(4,5)) 
+        # line3 = chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z'))) + chr(random.randint(ord('A'), ord('Z'))) + " " + random_char(random.randint(4,5))
         # line3 = "MRPRS " + random_char(random.randint(10,12))
+        # print(font_path[-1])
+        
 
+        months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
        
         if ftype == 0:
+            line1=f"*MRP Rs . {random.randrange(100,999)}/-"
+            line2=f"#{random.randrange(1,30)}/0{random.randrange(1,12)}/{random.randrange(1,30)} {chr(random.randint(ord('A'), ord('Z')))} 00{random.randrange(1,9)}"
+            line3=f"##NET VOL . {random.randrange(100,999)}ML"
             xcor1=random.randint(int(x1),int(x2))
             ycor1=random.randint(int(y1),int(y2))
             xcor2 = xcor1
             ycor2 = ycor1 + random.randint(35,45)
             xcor3 = xcor1 
             ycor3 = ycor2 + random.randint(35,45)
+            rot_ang = random.randint(-2,2)
+            image = draw_rotated_text(image,rot_ang,(xcor1,ycor1),line1,textcolor,font = font_path)
+            image = draw_rotated_text(image,rot_ang,(xcor2,ycor2),line2,textcolor,font = font_path)
+            image = draw_rotated_text(image,rot_ang,(xcor3,ycor3),line3,textcolor,font = font_path)
         elif ftype == 1:
+            line1=f"Rs.{random.randrange(10,99)}(Re 0.{random.randrange(10,99)}/ml)"
+            line2=f"NB{random.randrange(10,99)}00{random.randrange(10,99)}{chr(random.randint(ord('A'), ord('Z')))}/{random.randrange(1,9)}"
+            line3=f"{random.choice(months)} {random.randint(2024, 2029)}"
+            line4=f"{random.choice(months)} {random.randint(2024, 2029)}"
+           
             xcor1=random.randint(int(x1),int(x2))
             ycor1=random.randint(int(y1),int(y2))
-            xcor2 = xcor1
-            ycor2 = ycor1 + random.randint(35,45)
+            xcor2 = xcor1 +font_path.getlength(line1)+random.randint(35,45)
+            ycor2 = ycor1 
             xcor3 = xcor1 
-            ycor3 = ycor2 + random.randint(35,45)
+            ycor3 = ycor2 + random.randint(35,45)   
+            xcor4 = xcor1 + font_path.getlength(line3)+ random.randint(35,45)
+            ycor4 = ycor3
+            rot_ang = random.randint(-2,2)
+            image = draw_rotated_text(image,rot_ang,(xcor1,ycor1),line1,textcolor,font = font_path)
+            image = draw_rotated_text(image,rot_ang,(xcor2,ycor2),line2,textcolor,font = font_path)
+            image = draw_rotated_text(image,rot_ang,(xcor3,ycor3),line3,textcolor,font = font_path)
+            image = draw_rotated_text(image,rot_ang,(xcor4,ycor4),line4,textcolor,font = font_path)
+
         elif ftype == 2:
+            line1=f"BN:{random.randrange(1,9)}-{random.randrange(1,9)}/{random.randrange(1,9)}={random.randrange(1,9)}"
+            line2=f"MFD: {random.randrange(1,31)}/{random.randrange(1,12)}/0{random.randrange(21,24)}"
+            line3=f"BB: {random.randrange(1,31)}/{random.randrange(1,12)}/0{random.randrange(25,29)}"
+            line4=f"MRP RS  {random.randrange(100,999)} {random.randrange(1,24)}:{random.randrange(1,60)}"
             xcor1=random.randint(int(x1),int(x2))
             ycor1=random.randint(int(y1),int(y2))
             xcor2 = xcor1
             ycor2 = ycor1 + random.randint(35,45)
             xcor3 = xcor1 
-            ycor3 = ycor2 + random.randint(35,45)
+            ycor3 = ycor2 + random.randint(35,45)  
+            xcor4 = xcor1 
+            ycor4 = ycor3 + random.randint(35,45)
+            rot_ang = random.randint(-2,2)
+            image = draw_rotated_text(image,rot_ang,(xcor1,ycor1),line1,textcolor,font = font_path)
+            image = draw_rotated_text(image,rot_ang,(xcor2,ycor2),line2,textcolor,font = font_path)
+            image = draw_rotated_text(image,rot_ang,(xcor3,ycor3),line3,textcolor,font = font_path)
+            image = draw_rotated_text(image,rot_ang,(xcor4,ycor4),line4,textcolor,font = font_path)
         elif ftype == 3:
+            line1=f"*MRP NPR {random.randrange(100,999)}/-"
+            line2=f"{random.randrange(1,30)}/0{random.randrange(1,12)}/{random.randrange(1,30)} {chr(random.randint(ord('A'), ord('Z')))} 0{random.randrange(1,9)}"
             xcor1=random.randint(int(x1),int(x2))
             ycor1=random.randint(int(y1),int(y2))
             xcor2 = xcor1
             ycor2 = ycor1 + random.randint(35,45)
-            xcor3 = xcor1 
-            ycor3 = ycor2 + random.randint(35,45)
+            # xcor3 = xcor1 
+            # ycor3 = ycor2 + random.randint(35,45)
+            image = draw_rotated_text(image,rot_ang,(xcor1,ycor1),line1,textcolor,font = font_path)
+            image = draw_rotated_text(image,rot_ang,(xcor2,ycor2),line2,textcolor,font = font_path)
         
             
-        rot_ang = random.randint(-1,1)
-        #print("time0: ", time.time()-st)
-        image = draw_rotated_text(image,rot_ang,(xcor1,ycor1),line1,textcolor,font = font_path)
-        image = draw_rotated_text(image,rot_ang,(xcor2,ycor2),line2,textcolor,font = font_path)
-        image = draw_rotated_text(image,rot_ang,(xcor3,ycor3),line3,textcolor,font = font_path)
+        # rot_ang = random.randint(-1,1)
+        # image = draw_rotated_text(image,rot_ang,(xcor1,ycor1),line1,textcolor,font = font_path)
+        # image = draw_rotated_text(image,rot_ang,(xcor2,ycor2),line2,textcolor,font = font_path)
+        # image = draw_rotated_text(image,rot_ang,(xcor3,ycor3),line3,textcolor,font = font_path)
        
         name_image_text = str(time.time())
         op_img_name = os.path.join('output',str(name_image_text) + '.jpg')

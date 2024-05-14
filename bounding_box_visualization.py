@@ -8,7 +8,8 @@ if __name__ == '__main__':
     '''
     Give the output directiory here for visualization
     '''
-    data_dir =""##output directory generated after runing main.py
+    data_dir =r"C:\Users\shres\OneDrive\Desktop\Office\data_fabrication\Text-Fabrication\output"
+    ##output directory generated after runing main.py
     # data_dir = "data/Aug2"
 
     if os.path.exists(data_dir) is False:
